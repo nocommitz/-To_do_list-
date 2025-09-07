@@ -5,13 +5,13 @@ Console.WriteLine("What would you like to do today ?");
 Console.WriteLine("1. Add a new task");
 Console.WriteLine("2. View all tasks");
 Console.WriteLine("3. Mark a task as completed");
-Console.WriteLine("4. Exit");
+Console.WriteLine("4. Exit");// Display menu options
 
 var tasks = new List<(string Description, bool IsCompleted)>();
-while (true)
+while (true)// Main loop
 {
     Console.Write("Enter your choice (1-4): ");
-    var choice = Console.ReadLine();
+    var choice = Console.ReadLine();// Read user input
 
     switch (choice)
     {
@@ -43,12 +43,12 @@ while (true)
             {
                 Console.WriteLine("Invalid task number.");
             }
-            break;
+            break;// Mark a task as completed
 
         case "4":
             Console.WriteLine("Exiting...");
             Console.WriteLine("Goodbye!");
-            return;
+            return;// Exit the application
 
         default:
             Console.WriteLine("Invalid choice. Please try again.");
