@@ -1,7 +1,12 @@
-﻿using System;
+﻿
+// Import the System namespace for basic functionality
+using System;
 
 
+
+// Display the main menu to the user
 Console.WriteLine("What would you like to do today ?");
+
 
 Console.WriteLine("1. Add a new task");
 Console.WriteLine("2. View all tasks");
@@ -10,47 +15,104 @@ Console.WriteLine("4. Start a task");
 Console.WriteLine("5. Exit");// Display menu options
 
 
-var tasks = new List<(string Description, bool IsCompleted)>();
-var stopwatch = new System.Diagnostics.Stopwatch();
-int? currentTaskIndex = null;
-while (true)// Main loop
-{
-    Console.Write("Enter your choice (1-5): ");
-    var choice = Console.ReadLine();// Read user input
+// List to store all tasks. Each task has a description, completion status, due date, and allocated hours.
+var tasks = new List<(string Description, bool IsCompleted, DateTime? DueDate, double? AllocatedHours)>();
 
+// Stopwatch for timing how long a user spends on a task
+var stopwatch = new System.Diagnostics.Stopwatch();
+
+// Index of the currently timed task (if any)
+int? currentTaskIndex = null;
+
+// Main program loop
+while (true)
+{
+    // Prompt user for menu choice
+    Console.Write("Enter your choice (1-5): ");
+    var choice = Console.ReadLine();
+
+    // Handle user menu choice
     switch (choice)
     {
+
+
         case "1":
+            // Add a new task
             Console.Write("Enter task description: ");
             var description = Console.ReadLine() ?? string.Empty;
-            tasks.Add((description, false));
+            // Prompt for due date
+            Console.Write("Enter due date (yyyy-MM-dd) or leave blank: ");
+            var dueDateInput = Console.ReadLine();
+            DateTime? dueDate = null;
+            if (!string.IsNullOrWhiteSpace(dueDateInput))
+            {
+                if (DateTime.TryParse(dueDateInput, out DateTime parsedDate))
+                {
+                    dueDate = parsedDate;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date format. Due date will be left empty.");
+                }
+            }
+            // Prompt for allocated hours
+            Console.Write("Enter allocated hours (e.g., 2.5) or leave blank: ");
+            var hoursInput = Console.ReadLine();
+            double? allocatedHours = null;
+            if (!string.IsNullOrWhiteSpace(hoursInput))
+            {
+                if (double.TryParse(hoursInput, out double parsedHours))
+                {
+                    allocatedHours = parsedHours;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid hours format. Allocated hours will be left empty.");
+                }
+            }
+            // Add the new task to the list
+            tasks.Add((description, false, dueDate, allocatedHours));
             Console.WriteLine("Task added.");
-            break;// Add a new task
+            break;
+
+
 
         case "2":
+            // View all tasks
             Console.WriteLine("Tasks:");
             for (int i = 0; i < tasks.Count; i++)
             {
                 var status = tasks[i].IsCompleted ? "[X]" : "[ ]";
-                Console.WriteLine($"{i + 1}. {status} {tasks[i].Description}");
+                // Show due date if available
+                var due = tasks[i].DueDate != null ? $" (Due: {tasks[i].DueDate:yyyy-MM-dd})" : "";
+                // Show allocated hours if available
+                var hours = tasks[i].AllocatedHours != null ? $" | Allocated hours: {tasks[i].AllocatedHours}" : "";
+                Console.WriteLine($"{i + 1}. {status} {tasks[i].Description}{due}{hours}");
             }
-            break;// View all tasks
+            break;
+
+
 
         case "3":
+            // Mark a task as completed
             Console.Write("Enter task number to mark as completed: ");
             if (int.TryParse(Console.ReadLine(), out int taskNumber) && taskNumber > 0 && taskNumber <= tasks.Count)
             {
                 var task = tasks[taskNumber - 1];
-                tasks[taskNumber - 1] = (task.Description, true);
+                // Update the task as completed
+                tasks[taskNumber - 1] = (task.Description, true, task.DueDate, task.AllocatedHours);
                 Console.WriteLine("Task marked as completed.");
             }
             else
             {
                 Console.WriteLine("Invalid task number.");
             }
-            break;// Mark a task as completed
+            break;
+
+
 
         case "4":
+            // Start a timer for a task
             if (stopwatch.IsRunning)
             {
                 Console.WriteLine("A timer is already running. Please stop it before starting another task.");
@@ -72,15 +134,19 @@ while (true)// Main loop
             {
                 Console.WriteLine("Invalid task number.");
             }
-            break;// Start a task with timer
+            break;
+
 
         case "5":
+            // Exit the application
             Console.WriteLine("Exiting...");
             Console.WriteLine("Goodbye!");
-            return;// Exit the application
+            return;
+
 
         default:
+            // Handle invalid choices
             Console.WriteLine("Invalid choice. Please try again.");
-            break; // Handle invalid choices
+            break;
     }
 }
