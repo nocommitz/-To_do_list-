@@ -2,15 +2,20 @@
 
 
 Console.WriteLine("What would you like to do today ?");
+
 Console.WriteLine("1. Add a new task");
 Console.WriteLine("2. View all tasks");
 Console.WriteLine("3. Mark a task as completed");
-Console.WriteLine("4. Exit");// Display menu options
+Console.WriteLine("4. Start a task");
+Console.WriteLine("5. Exit");// Display menu options
+
 
 var tasks = new List<(string Description, bool IsCompleted)>();
+var stopwatch = new System.Diagnostics.Stopwatch();
+int? currentTaskIndex = null;
 while (true)// Main loop
 {
-    Console.Write("Enter your choice (1-4): ");
+    Console.Write("Enter your choice (1-5): ");
     var choice = Console.ReadLine();// Read user input
 
     switch (choice)
@@ -46,6 +51,30 @@ while (true)// Main loop
             break;// Mark a task as completed
 
         case "4":
+            if (stopwatch.IsRunning)
+            {
+                Console.WriteLine("A timer is already running. Please stop it before starting another task.");
+                break;
+            }
+            Console.Write("Enter task number to start: ");
+            if (int.TryParse(Console.ReadLine(), out int startTaskNumber) && startTaskNumber > 0 && startTaskNumber <= tasks.Count)
+            {
+                currentTaskIndex = startTaskNumber - 1;
+                stopwatch.Restart();
+                Console.WriteLine($"Timer started for task: {tasks[currentTaskIndex.Value].Description}");
+                Console.WriteLine("Press ENTER when you have completed the task to stop the timer...");
+                Console.ReadLine();
+                stopwatch.Stop();
+                var elapsed = stopwatch.Elapsed;
+                Console.WriteLine($"Timer stopped. Elapsed time: {elapsed.Hours:D2}:{elapsed.Minutes:D2}:{elapsed.Seconds:D2}");
+            }
+            else
+            {
+                Console.WriteLine("Invalid task number.");
+            }
+            break;// Start a task with timer
+
+        case "5":
             Console.WriteLine("Exiting...");
             Console.WriteLine("Goodbye!");
             return;// Exit the application
