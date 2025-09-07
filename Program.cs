@@ -52,6 +52,6 @@ while (true)
 
         default:
             Console.WriteLine("Invalid choice. Please try again.");
-            break;
+            break; // Handle invalid choices
     }
 }
