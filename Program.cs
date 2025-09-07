@@ -20,7 +20,7 @@ while (true)// Main loop
             var description = Console.ReadLine() ?? string.Empty;
             tasks.Add((description, false));
             Console.WriteLine("Task added.");
-            break;
+            break;// Add a new task
 
         case "2":
             Console.WriteLine("Tasks:");
@@ -29,7 +29,7 @@ while (true)// Main loop
                 var status = tasks[i].IsCompleted ? "[X]" : "[ ]";
                 Console.WriteLine($"{i + 1}. {status} {tasks[i].Description}");
             }
-            break;
+            break;// View all tasks
 
         case "3":
             Console.Write("Enter task number to mark as completed: ");
